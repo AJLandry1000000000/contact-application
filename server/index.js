@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import 'dotenv/config'
 import userRouter from './routes/user.js'
+import contactRoutes from './routes/contact.js';
+import limiter from './middleware/rateLimiter.js';
 
 const app = express();
 
@@ -32,8 +34,12 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+// Apply rate limiting middleware to all routes.
+app.use(limiter);
 
+// Add the User and Contact routes to the app.
 app.use("/api/v1", userRouter)
+app.use("/api/v1", contactRoutes)
 
 app.get('/', (req, res) => {
   res.send("working");

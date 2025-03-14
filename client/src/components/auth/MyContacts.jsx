@@ -1,10 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Footer } from "@/components/footer/Footer";
+import { useAuth } from "@/contextApi/auth";
+import { fetchContacts } from "@/api/api";
 
 const MyContacts = () => {
   const [modal, setModal] = useState(false);
   const [contactData, setContactData] = useState([]);
+  const [auth] = useAuth();
+
+  const getContacts = async () => {
+    if (auth.user) {
+      try {
+        const data = await fetchContacts(auth.user._id, auth.token);
+        setContactData(data);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getContacts();
+  }, []);
 
   const openModal = () => {
     setModal(true);
@@ -17,7 +35,6 @@ const MyContacts = () => {
         <table>
           <thead>
           <tr>
-
             <th>Name</th>
             <th>Number</th>
             <th>Address</th>

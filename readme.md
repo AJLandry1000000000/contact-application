@@ -54,3 +54,11 @@ Best of luck!
 * it will run the server on --> http://localhost:3000
 
 <!-- -------------------------------------------------------------------------------------------- -->
+
+
+
+
+
+
+Assumptions:
+- Every contact: userId, name, number must be unique.
