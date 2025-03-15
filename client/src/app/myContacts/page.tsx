@@ -1,3 +1,3 @@
-import MyContacts from "@/components/auth/MyContacts";
+import MyContacts from "@/components/ui/MyContacts";
 
 export default () => <MyContacts />;

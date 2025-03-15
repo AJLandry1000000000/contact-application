@@ -5,6 +5,7 @@ import User from "../model/user.js";
 /**
  * Method to create a contact for a user.
  * All fields are required. 
+ * Only the user can create contacts for themself. This is verified by checking the userId in the request against the userId identified by the JWT.
  * 
  * @param {*} req 
  * @param {*} res 
@@ -58,7 +59,15 @@ export const createContact = async (req, res) => {
   }
 };
 
-
+/**
+ * Method to update an existing contact for a user.
+ * All fields are required. 
+ * Only the user can update their own contacts. This is verified by checking the userId in the request against the userId identified by the JWT.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export const updateContact = async (req, res) => {
   try {
     const contactId = req.params.contactId
@@ -105,6 +114,15 @@ export const updateContact = async (req, res) => {
   }
 };
 
+/**
+ * Method to view all contacts for a user.
+ * All fields are required.
+ * Only the user can view their own contacts. This is verified by checking the userId in the request against the userId identified by the JWT.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export const viewContact = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -126,6 +144,15 @@ export const viewContact = async (req, res) => {
   }
 };
 
+/**
+ * Method to delete a contact for a user.
+ * All fields are required.
+ * Only the user can delete their own contacts. This is verified by checking the userId in the contact requested for deletion, against the userId identified by the JWT.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export const deleteContact = async (req, res) => {
   try {
     const contactId = req.params.contactId;

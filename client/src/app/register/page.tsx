@@ -1,3 +1,3 @@
-import Register from "@/components/auth/Register";
+import Register from "@/components/ui/Register";
 
 export default () => <Register />;

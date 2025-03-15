@@ -59,6 +59,7 @@ Best of luck!
 
 
 Mention I could have used react-model instead of building a custom modal.
+Mention I didnt spend much time on styling to prioritise logic changes
 
 Assumptions:
 - Every contact: userId, name, number must be unique.

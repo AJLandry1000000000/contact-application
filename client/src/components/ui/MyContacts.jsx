@@ -3,14 +3,20 @@ import React, { useState, useEffect } from "react";
 import { Footer } from "@/components/footer/Footer";
 import { useAuth } from "@/contextApi/auth";
 import { fetchContacts, deleteContact } from "@/api/contactApi";
-import ContactForm from "./ContactForm";
-import CustomModal from "./CustomModal";
+import ContactForm from "@/components/ui/ContactForm";
+import CustomModal from "@/components/ui/CustomModal";
+import Popup from "@/components/ui/Popup";
 
 const MyContacts = () => {
+  const [auth] = useAuth();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [contactData, setContactData] = useState([]);
-  const [auth] = useAuth();
+  const [popup, setPopup] = useState({ message: "", type: "" });
+
+  useEffect(() => {
+    getContacts();
+  }, []);
 
   const getContacts = async () => {
     if (auth.user) {
@@ -22,10 +28,6 @@ const MyContacts = () => {
       }
     }
   };
-
-  useEffect(() => {
-    getContacts();
-  }, []);
 
   const openModal = (contact) => {
     setSelectedContact(contact);
@@ -49,14 +51,17 @@ const MyContacts = () => {
 
       if (response.status === 200) {
         console.log(`Contact deleted successfully!`);
+        setPopup({ message: "Contact deleted successfully!", type: "success" });
       }
     } catch (error) {
       console.error("Error deleting contact:", error);
+      setPopup({ message: "Error deleting contact: " + error.message, type: "error" });
     }
   };
 
   return (
     <div className="profile">
+      {popup.message && <Popup message={popup.message} type={popup.type} onClose={() => setPopup({ message: "", type: "" })} />}
       <h2>My Contacts</h2>
       {contactData.length > 0 ? (
         <table>

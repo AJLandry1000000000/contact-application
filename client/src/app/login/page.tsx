@@ -1,4 +1,4 @@
 "use client"
-import Login from "@/components/auth/Login";
+import Login from "@/components/ui/Login";
 
 export default () => <Login />;

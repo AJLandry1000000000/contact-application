@@ -24,7 +24,7 @@ const Register = () => {
       } else if (password !== cpassword) {
         toast.error("password and confirm password do not match");
       } else {
-        const { data } = registerUser(email, password, cpassword);
+        const data  = registerUser(email, password, cpassword);
 
         if (data.existingUser) {
           toast.error(data.message)

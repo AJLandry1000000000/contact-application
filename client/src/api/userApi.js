@@ -4,7 +4,7 @@ const BASE_URL = "http://localhost:4500/api/v1";
 
 export const loginUser = async (email, password) => {
   try {
-    const { data } = await axios.post(BASE_URL + `/login`, {
+    const data = await axios.post(BASE_URL + `/login`, {
       email, password
     }) 
 
@@ -16,7 +16,7 @@ export const loginUser = async (email, password) => {
 
 export const registerUser = async (email, password, cpassword) => {
   try {
-    const { data } = await axios.post(BASE_URL + `/register`, {
+    const data = await axios.post(BASE_URL + `/register`, {
       email, password, cpassword
     }) 
     
