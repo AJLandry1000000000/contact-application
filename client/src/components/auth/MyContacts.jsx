@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { Footer } from "@/components/footer/Footer";
 import { useAuth } from "@/contextApi/auth";
-import { fetchContacts } from "@/api/api";
+import { fetchContacts, deleteContact } from "@/api/contactApi";
+import ContactForm from "./ContactForm";
+import CustomModal from "./CustomModal";
 
 const MyContacts = () => {
-  const [modal, setModal] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
   const [contactData, setContactData] = useState([]);
   const [auth] = useAuth();
 
@@ -24,8 +27,32 @@ const MyContacts = () => {
     getContacts();
   }, []);
 
-  const openModal = () => {
-    setModal(true);
+  const openModal = (contact) => {
+    setSelectedContact(contact);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedContact(null);
+    setModalIsOpen(false);
+    getContacts();
+  }
+
+  const deleteContactOperation = async (contact) => {
+    if (!auth.user) {
+      return;
+    }
+    
+    try {
+      let response = await deleteContact(contact._id, auth.token);
+      getContacts();
+
+      if (response.status === 200) {
+        console.log(`Contact deleted successfully!`);
+      }
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+    }
   };
 
   return (
@@ -50,15 +77,12 @@ const MyContacts = () => {
                 <td>{c.number}</td>
                 <td>{c.address}</td>
                 <td className="btn">
-                  <button className="edit" onClick={() => openModal()}>
+                  <button className="edit" onClick={() => openModal(c)}>
                     Edit{" "}
                   </button>
-                  {modal === true && (
-                      <h1>Update Contact page</h1>
-                  )}
                   <button
                     className="delete"
-                    onClick={() => {}}
+                    onClick={() => deleteContactOperation(c)}
                   >
                     Delete
                   </button>
@@ -74,6 +98,12 @@ const MyContacts = () => {
         </p>
       )}
       <Footer />
+      <CustomModal isOpen={modalIsOpen} onClose={closeModal}>
+        <h2>Edit Contact</h2>
+        {selectedContact && (
+          <ContactForm formType="edit" initialData={selectedContact} onSuccess={closeModal} />
+        )}
+      </CustomModal>
     </div>
   );
 };

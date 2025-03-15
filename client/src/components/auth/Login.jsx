@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from 'react'
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/contextApi/auth';
 import { useRouter } from "next/navigation";
+import { loginUser } from '@/api/userApi';
 import Link from "next/link";
 
 const Login = () => {
@@ -15,9 +15,7 @@ const Login = () => {
   const login = async (e) => {
     try {
       e.preventDefault();
-      const { data } = await axios.post("http://localhost:4500/api/v1/login", {
-        email, password
-      })
+      const { data } = await loginUser(email, password);
       if (data) {
         toast.success(data.message);
         setAuth({
@@ -27,10 +25,8 @@ const Login = () => {
 
         });
         localStorage.setItem("userID", JSON.stringify(data));
-        //   console.log(data)
         await router.push("/")
       }
-
 
     } catch (error) {
       toast.error(error.response.data.message)

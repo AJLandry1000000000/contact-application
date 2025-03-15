@@ -1,22 +1,31 @@
 "use client";
-import React, { useState } from "react";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contextApi/auth";
-import { createContact } from "@/api/api";
+import { createContact, updateContact } from "@/api/contactApi";
 import { useRouter } from "next/navigation";
 
-const ContactForm = ({ formType }) => {
+const ContactForm = ({ formType, initialData, onSuccess }) => {
   const [auth] = useAuth();
   const [formData, setFormData] = useState({
+    _id: "",
     userId: "",
     name: "",
     number: "",
     address: ""
   });
   const router = useRouter();
-  
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, []);
+
   const onSuccessfulSubmission = async () => {
     router.push('/');
+    if (onSuccess) {
+      onSuccess();
+    }
   }
 
   const handleChange = (e) => {
@@ -37,11 +46,11 @@ const ContactForm = ({ formType }) => {
       if (response.status === 200) {
         onSuccessfulSubmission();
         
-        console.log(`Contact created successfully: ${response.data.message}`);
+        let operation = formType === "edit" ? "updated" : "created";
+        console.log(`Contact ${operation} successfully!`);
       }
     } catch (error) {
       console.error("Error submitting contact: ", error);
-      toast.error(`Error submitting contact: ${error}`);
     }
   };
 
@@ -59,7 +68,9 @@ const ContactForm = ({ formType }) => {
         <label>Address:</label>
         <input type="text" name="address" value={formData.address} onChange={handleChange} required />
       </div>
-      <button type="submit">Create Contact</button>
+      <button type="submit">
+        {formType === "edit" ? "Update Contact" : "Create Contact"}
+      </button>
     </form>
   );
 };

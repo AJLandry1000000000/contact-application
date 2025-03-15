@@ -11,12 +11,17 @@ import User from "../model/user.js";
  * @returns 
  */
 export const createContact = async (req, res) => {
-  try {
+  try {    
     const { userId, name, number, address } = req.body;
-
+    
     // Validate the contact fields are all present. 
     if (!userId || !name || !number || !address) {
       return res.status(400).json({ message: "Please fill in all the contact fields." });
+    }
+    
+    // Ensure the request is coming from the user it is modifying.
+    if (req.user._id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to create a contact for this user." });
     }
 
     // Since number is a Number type in the schema, I will assume any 10 digit number is valid.
@@ -39,7 +44,7 @@ export const createContact = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Check that the contact already exists.
+    // Check that if the new contact already exists.
     const existingContact = await Contact.findOne({ userId, name, number });
     if (existingContact) {
       return res.status(200).json({ message: "Contact already exists." });
@@ -56,12 +61,17 @@ export const createContact = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   try {
-    const contact_id = req.params.contactId
+    const contactId = req.params.contactId
     const { userId, name, number, address } = req.body;
 
     // Validate the contact fields are all present. 
-    if (!contact_id || !userId || !name || !number || !address) {
+    if (!contactId || !userId || !name || !number || !address) {
       return res.status(400).json({ message: "Please fill in all the contact fields." });
+    }
+
+    // Ensure the request is coming from the user it is modifying.
+    if (req.user._id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to update a contact for this user." });
     }
 
     // Since number is a Number type in the schema, I will assume any 10 digit number is valid.
@@ -75,11 +85,18 @@ export const updateContact = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
+    
+    // Check that if the  new contact already exists.
+    const existingContact = await Contact.findOne({ userId, name, number });
+    if (existingContact) {
+      return res.status(200).json({ message: "Contact already exists." });
+    }
 
+    // Update the contact.
     const updatedContact = { userId, name, number, address };
-    const contact = await Contact.findByIdAndUpdate(contact_id, updatedContact, { new: true });
+    const contact = await Contact.findByIdAndUpdate(contactId, updatedContact, { new: true });
     if (!contact) {
-      return res.status(404).json({ message: 'Contact not found' });
+      return res.status(404).json({ message: 'Existing contact not found.' });
     }
 
     res.status(200).json(contact);
@@ -94,6 +111,12 @@ export const viewContact = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ message: "Please provide a user ID." });
     }
+
+    // Ensure the request is coming from the user it is modifying.
+    if (req.user._id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to view contacts for this user." });
+    }
+  
 
     const contact = await Contact.find({ userId });
 
@@ -110,10 +133,18 @@ export const deleteContact = async (req, res) => {
       return res.status(400).json({ message: "Please provide a contact ID." });
     }
 
-    const contact = await Contact.findByIdAndDelete(contactId);
+    // Find the contact to get the userId.
+    const contact = await Contact.findById(contactId);
     if (!contact) {
       return res.status(404).json({ message: 'Contact not found.' });
     }
+
+    // Ensure the request is coming from the user it is modifying.
+    if (req.user._id !== contact.userId) {
+      return res.status(403).json({ message: "You are not authorized to delete a contact for this user." });
+    }
+
+    await Contact.findByIdAndDelete(contactId);
     res.status(200).json({ message: 'Contact successfully deleted.' });
   } catch (error) {
     res.status(400).json({ message: error.message });

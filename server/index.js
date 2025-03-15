@@ -5,7 +5,7 @@ import cors from 'cors';
 import 'dotenv/config'
 import userRouter from './routes/user.js'
 import contactRoutes from './routes/contact.js';
-import limiter from './middleware/rateLimiter.js';
+import limiter from './middleware/rateLimiterMiddleware.js';
 
 const app = express();
 

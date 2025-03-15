@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react'
 import { toast } from "react-hot-toast";
-import axios from 'axios';
+import { registerUser } from '@/api/userApi';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -24,9 +24,8 @@ const Register = () => {
       } else if (password !== cpassword) {
         toast.error("password and confirm password do not match");
       } else {
-        const { data } = await axios.post("http://localhost:4500/api/v1/register", {
-          email, password, cpassword
-        })
+        const { data } = registerUser(email, password, cpassword);
+
         if (data.existingUser) {
           toast.error(data.message)
           setTimeout(async () => {
