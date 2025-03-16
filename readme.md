@@ -73,11 +73,12 @@ Best of luck!
     - In the frontend I display and allow modifications on only that users data. 
     - In the backend controllers I verify that the request is coming from the user (identified by their JWT) who is reading/modifying their own data.
 - **Routes File**: I created a separate routes file for the Contact model to keep the routing logic organized and easily maintainable.
-- **Rate Limiting**: I used `express-rate-limit` to create a rate limiter for all server endpoints. This helps prevent abuse and ensures fair usage of the API.
+- **Rate Limiting**: For the bonus question I chose "rate limiting (prevent abuse)". I used `express-rate-limit` to create a rate limiter for all server endpoints. This helps prevent abuse and ensures fair usage of the API.
 - **UI Components**: Developed UI components that allow users to perform CRUD operations on contacts through the frontend. Ensured that users can only view and modify their own contacts.
 - **API Folder**: On the frontend project I moved all frontend API functions into an `api/` folder for better organization.
 - **Popup Component**: Created a popup component to notify users of the outcome of CRUD operations. This provides immediate feedback to users, whether the operation was successful or if there was an error (e.g., users trying to create a contact with a number less than 10 digits will be notified of the issue and how to correct it).
 - **Styling**: I added styling to my new frontend components. I focused on implementing the core functionality and logic over fancy styling. UI styling is important, but for the purposes of this exercise I chose to prioritise my technical solution and writing clean code.
+- **Testing**: I decided to do a second bonus question, "basic unit test for one critical API endpoint". I added thorough testing of the `createContact()` methond from `server/controller/contact.js` using Jest. My tests are in the `__tests__/` folder. See the Testing section below for more information.
 
 
 ## Further improvements
