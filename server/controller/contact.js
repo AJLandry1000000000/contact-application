@@ -53,9 +53,9 @@ export const createContact = async (req, res) => {
 
     const contact = new Contact({ userId, name, number, address });
     await contact.save();
-    res.status(200).json(contact);
+    return res.status(200).json(contact);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -108,9 +108,9 @@ export const updateContact = async (req, res) => {
       return res.status(404).json({ message: 'Existing contact not found.' });
     }
 
-    res.status(200).json(contact);
+    return res.status(200).json(contact);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -138,9 +138,9 @@ export const viewContact = async (req, res) => {
 
     const contact = await Contact.find({ userId });
 
-    res.status(200).json(contact);
+    return res.status(200).json(contact);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -172,8 +172,8 @@ export const deleteContact = async (req, res) => {
     }
 
     await Contact.findByIdAndDelete(contactId);
-    res.status(200).json({ message: 'Contact successfully deleted.' });
+    return res.status(200).json({ message: 'Contact successfully deleted.' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
